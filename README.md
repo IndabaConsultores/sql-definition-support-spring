@@ -6,7 +6,7 @@ Proposal for an Spring integration of the base SQL query externalization library
 ```java
 @Configuration
 @ComponentScan(basePackages = {"es.indaba.sqld"})
-@QueryRepository("es.indaba.sqld.test.sq")
+@QueryRepository("es.indaba.sqld.test")
 public class TestConfiguration {
 
 }
