@@ -8,20 +8,32 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import es.indaba.sqld.annotations.spring.api.QueryRepositories;
 import es.indaba.sqld.annotations.spring.api.QueryRepository;
-import es.indaba.sqld.loader.SQLDClassPathLoader;
+import es.indaba.sqld.api.QueryDefinitionRepository;
+import es.indaba.sqld.impl.loader.QueryDefinitionClassPathLoader;
 
 @Component
 public class QueryRepositoryLoader implements BeanPostProcessor {
 
     private final ConfigurableListableBeanFactory configurableBeanFactory;
-
+    
+    private QueryDefinitionRepository repository;
+    
     @Autowired
     public QueryRepositoryLoader(final ConfigurableListableBeanFactory beanFactory) {
         this.configurableBeanFactory = beanFactory;
+    }
+    
+    @Bean
+    public QueryDefinitionRepository getRepository() {
+        if (repository == null) {
+            repository = new QueryDefinitionRepository(); 
+        }
+        return repository;
     }
 
     @Override
@@ -40,9 +52,11 @@ public class QueryRepositoryLoader implements BeanPostProcessor {
             }
         }
         
+        QueryDefinitionRepository repository =  getRepository();
+        
         if (!prefixes.isEmpty()) {
             for (final String prefix:prefixes) {
-                SQLDClassPathLoader.loadSqlds(prefix);
+                QueryDefinitionClassPathLoader.loadQueryDefinitionFiles(prefix, repository);
             }
         }
 
