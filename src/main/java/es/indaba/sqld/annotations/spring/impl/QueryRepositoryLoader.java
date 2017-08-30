@@ -52,11 +52,11 @@ public class QueryRepositoryLoader implements BeanPostProcessor {
             }
         }
         
-        QueryDefinitionRepository repository =  getRepository();
+       final QueryDefinitionRepository localRepository =  getRepository();
         
         if (!prefixes.isEmpty()) {
             for (final String prefix:prefixes) {
-                QueryDefinitionClassPathLoader.loadQueryDefinitionFiles(prefix, repository);
+                QueryDefinitionClassPathLoader.loadQueryDefinitionFiles(prefix, localRepository);
             }
         }
 
